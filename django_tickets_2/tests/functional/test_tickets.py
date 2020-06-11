@@ -71,3 +71,10 @@ def test_ticket_close_not_by_superuser_permission_denied(db, ticket_factory, use
     user = user_factory()
     with pytest.raises(PermissionDenied):
         ticket.close(user)
+
+
+def test_ticket_changes_requested_not_by_author_permission_denied(db, ticket_factory, user_factory):
+    ticket = ticket_factory.completed()
+    user = user_factory()
+    with pytest.raises(PermissionDenied):
+        ticket.request_changes(user)
