@@ -40,6 +40,39 @@ class Ticket(models.Model):
     def __str__(self):
         return self.title
 
+    def pending_approval(self):
+        return Approval.objects.filter(ticket=self, approved=False)
+
+    def approve(self, user):
+        try:
+            approval = Approval.objects.get(user=user, ticket=self)
+            approval.approved = True
+            approval.save()
+        except:
+            raise PermissionDenied()
+        if not self.pending_approval():
+            self.status = self.STATUS_INPROGRESS
+
+    def request_changes(self, user):
+        if user == self.author:
+            self.status = self.STATUS_CHANGES_REQUESTED
+        else:
+            raise PermissionDenied()
+
+    def complete(self, user):
+        if user == self.assignee:
+            self.status = self.STATUS_COMPLETED
+        elif user == self.author:
+            self.completed = True
+        else:
+            raise PermissionDenied()
+
+    def close(self, user):
+        if user.is_superuser:
+            self.status = self.STATUS_CLOSED
+        else:
+            raise PermissionDenied()
+
 
 class Approval(models.Model):
     user = models.ForeignKey(User, related_name='approvals', on_delete=models.CASCADE)
