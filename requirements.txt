@@ -12,7 +12,6 @@ inflection==0.5.0
 mccabe==0.6.1
 more-itertools==8.3.0
 packaging==20.4
-pkg-resources==0.0.0
 pluggy==0.13.1
 py==1.8.1
 pycodestyle==2.6.0
