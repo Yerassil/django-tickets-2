@@ -19,9 +19,9 @@ def test_ticket_pending_approvers_ok(db, ticket_factory, user_factory):
     approvers = user_factory.create_batch(3)
     for user in approvers:
         ticket.approvers.add(user)
-    assert len(ticket.pending_approval())==3
-    ticket.approve(ticket.pending_approval()[0].user)
-    assert len(ticket.pending_approval())==2
+    assert len(ticket.pending_approvers()) == 3
+    ticket.approve(ticket.pending_approvers()[0])
+    assert len(ticket.pending_approvers()) == 2
 
 
 def test_ticket_inprogress_ok(db, ticket_factory):
